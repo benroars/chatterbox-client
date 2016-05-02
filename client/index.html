@@ -17,7 +17,32 @@
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
+
+      <form action="/scripts/app.js" method="POST" onsubmit="makePost();">
+        Username:<br>
+        <input id="user" type="text" name="username" value="user"><br>
+        Message:<br>
+        <input id="mess" type="text" name="text" value="asdf"><br><br>
+        Room:<br>
+        <input id="chatrm" type="text" name="roomname" value="1"><br><br>
+        <input type="submit" value="Submit">
+      </form>
     </div>
-    <div id="chats"></div>
+    <div class="chat"></div>
+
+    <script>
+      
+      // $(document).ready(function(){
+      //   var makePost = function(){
+      //     var obj = {};
+      //     obj[username] = document.getElementById('user');
+      //     obj[text] = document.getElementById('mess');
+      //     obj[roomname] = document.getElementById('chatrm');
+
+      //     app.send(obj);
+      //   }
+      // });
+
+    </script>
   </body>
 </html>
