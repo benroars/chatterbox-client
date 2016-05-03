@@ -42,60 +42,23 @@ $(document).ready(function() {
       });
     
       $('body').on('click', '.username', function(e) {
-        // if (!app.userFriends[$('#user').val()]) {
-        //   app.userFriends[$('#user').val()] = [];
-        //   app.userFriends[$('#user').val()].push(username);
         
-        // } else {
-        //   app.userFriends[$('#user').val()].push(username);
-        // }
         e.preventDefault();
         var username = this.innerHTML.slice(0, this.innerHTML.indexOf(':'));
-      //  console.log(app.userLog);
-    //    if (app.userLog[$('#user')]) {
-        // if (!app.userLog[$('#user').val()]['friends'][username]) {
-        //   app.userLog[$('#user').val()]['friends'][username] = app.userLog[username].posts;
-        // }
-        // console.log('ok');
-        
-
 
         app.userObj[$('#user').val()].push(username);
         app.boldClassFriends($('#user').val());
 
-        //app.fetch();
       });
     },
 
     boldClassFriends: function(user) {
-      // var f = app.userLog[user].friends;
-      // //console.log(f);
-      // //console.log(f);
-      // for (var key in f) {
-      //   //console.log($('.' + key));
-      //   $('.' + key).each(function(i, value) {
-      //     //console.log(value);
-      //     // $(this).('<div class="chat mala friend"></div>');
-      //     console.log($(this));
-      //     $(this)[0].classList = 'chat mala friend';
-      //   });
-       // console.log(f[key][0]);
-//        $(f[key][0])[0].addClass('friend');
-       // _.each(f[key], function(value) { 
-       //  //console.log(value);
-       //  $(value).addClass('friend');
-       // });
-       //  // for (var i = 0; i < f[key]; i++) {
-        //   console.log(f[key][i]);
-        // //   $(f[key][i]).addClass('friend');
-        // }
-
-     // }
-    for(var i = 0; i < app.userObj[user].length; i++) {
-      $('.' + app.userObj[user][i]).each(function() {
-        $(this).addClass('friend');
-      });
-    }
+ 
+      for (var i = 0; i < app.userObj[user].length; i++) {
+        $('.' + app.userObj[user][i]).each(function() {
+          $(this).addClass('friend');
+        });
+      }
 
     },
 
@@ -111,7 +74,6 @@ $(document).ready(function() {
         contentType: 'application/json',
         success: function (data) {
           console.log('chatterbox: Message sent');
-          //this.clearMessages();
           app.fetch();
         },
         error: function (data) {
@@ -138,20 +100,12 @@ $(document).ready(function() {
         },
         
         success: function(data) {
-              //console.log(data);
           var $messages = $('<ul></ul>');
 
           _.each(data, message => {
             _.each(message, val => {
-              // if (!app.userLog[val.username]) {
-              //   app.userLog[val.username] = {posts: [], friends: {}};
 
-              // }
-              // if (!app.userLog[$('#user').val()]) {
-              //   app.userLog[$('#user').val()] = {posts: [], friends: {}};
-              // }
-
-              var $chatMessage = $('<div class="chat ' + val.username + '"></div>'); //.text(val.username + ':\n' + val.text);
+              var $chatMessage = $('<div class="chat ' + val.username + '"></div>'); 
               var x = $('<div class="chat username ' + val.username + '"></div>').text(val.username + ':');
               x.append($('<div class="message"></div>').text(val.text));
               $chatMessage.append(x);
@@ -159,16 +113,11 @@ $(document).ready(function() {
               if (val.roomname === $('#roomSelect option:selected').text()) {
                 $('#chats').append($chatMessage);
               }
-              // if (app.userLog[val.username].posts.indexOf($chatMessage[0]) === -1) {
-              //   app.userLog[val.username].posts.push($chatMessage[0]);
-              // }
-              //console.log(app.userLog);
 
               if (!app.userObj[val.username]) { 
                 app.userObj[val.username] = [];
               }
               
-
 
             });
           });
@@ -179,7 +128,6 @@ $(document).ready(function() {
     userLog: {},
 
     clearMessages: function() {
-      //$('#chats').html('');
       var myNode = $('#chats')[0];
       while (myNode.firstChild !== null) {
         myNode.removeChild(myNode.firstChild);
@@ -187,7 +135,7 @@ $(document).ready(function() {
     },
 
     addMessage: function(message) {
-      var $chatMessage = $('<div class="chat"></div>'); //.text(val.username + ':\n' + val.text);
+      var $chatMessage = $('<div class="chat"></div>'); 
       var x = $('<div class="chat username"></div>').text(message.username + ':');
       x.append($('<div class="message"></div>').text(message.text));
 
@@ -200,20 +148,14 @@ $(document).ready(function() {
     rooms: 1,
 
     addRoom: function(roomName) {
-      //var $room = $('<div class="' + roomName + '"></div>');
       var $room = $('<option value="' + this.rooms.length + '">' + roomName + '</option>');
       this.rooms++;
       $('#roomSelect').append($room);
-
-     // <option value="1">Lobby</option>
     }
 
-    
-
+  
   };
 
   app.init();
-  
-  //app.fetch();
 
 });
