@@ -32,6 +32,7 @@ $(document).ready(function() {
         };
 
         app.addMessage(messageObj);
+        app.fetch();
       });
 
       $('#addRoom').on('submit', function(e) {
