@@ -21,7 +21,7 @@
       <!-- Your HTML goes here! -->
 
       <h4>Room:   <select id="roomSelect">
-          <option value="1">room1</option>
+          <option value="1"></option>
           </select>
       
       </h4>
@@ -53,6 +53,13 @@
     <button class="button refresh-button" type="button">Refresh</button>
     <button class="button clear-button" type="button">Clear</button>
     
+    <script id="t" type="text/x-underscore">
+      <div><%= title %></div>
+      <div><%- title %></div>
+      <div><%safeHtmlOnly title safeHtmlOnly%></div>
+      <div><% print(title) %></div>
+    </script>
+
     <div id="chats"></div>
 
     

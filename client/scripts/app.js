@@ -1,11 +1,26 @@
+var purifyHTML = function(input) { 
+/* code that returns purified HTML */ 
+  var output = input.replace(/<script[^>]*?>.*?<\/script>/gi, '').
+    replace(/<[\/\!]*?[^<>]*?>/gi, '').
+    replace(/<style[^>]*?>.*?<\/style>/gi, '').
+    replace(/<![\s\S]*?--[ \t\n\r]*>/gi, '');
+  return output;
+};
+
+
 var app = {};
 // // YOUR CODE HERE:
 $(document).ready(function() {
 
   app = {
 
+    userObj: {},
+    postObj: {},
+    refreshFlag: true,
+    server: 'https://api.parse.com/1/classes/messages',
+
+
     init: function() {
-      console.log('asdfasd');
       //click handlers
 
       $('.refresh-button').on('click', (e) => {
@@ -32,7 +47,7 @@ $(document).ready(function() {
         };
 
         app.addMessage(messageObj);
-        app.fetch();
+        //app.fetch();
       });
 
       $('#addRoom').on('submit', function(e) {
@@ -44,25 +59,29 @@ $(document).ready(function() {
       $('body').on('click', '.username', function(e) {
         
         e.preventDefault();
-        var username = this.innerHTML.slice(0, this.innerHTML.indexOf(':'));
-
+       
+        var username = this.innerHTML.replace(' ', '').slice(0, this.innerHTML.indexOf(':'));
         app.userObj[$('#user').val()].push(username);
-        app.boldClassFriends($('#user').val());
+
+        app.boldClassFriends(username, app.userObj[$('#user').val()]);
 
       });
+
     },
 
-    boldClassFriends: function(user) {
- 
-      for (var i = 0; i < app.userObj[user].length; i++) {
-        $('.' + app.userObj[user][i]).each(function() {
+    boldClassFriends: function(user, friendArray) {
+
+      console.log(user);
+      $('.' + user).each(function() {
+        if ($(this).hasClass('friend')) {
+          $(this).removeClass('friend');
+          var index = friendArray.indexOf(user);
+          friendArray.splice(index, 1);
+        } else {
           $(this).addClass('friend');
-        });
-      }
-
+        }
+      });
     },
-
-    server: 'https://api.parse.com/1/classes/messages',
 
     send: function(message) {
       //submits a POST request via $.ajax()
@@ -84,19 +103,20 @@ $(document).ready(function() {
 
     },
 
-    userObj: {},
-
     fetch: function() {
       //submits a GET request via $.ajax()
+     // if (refreshFlag) {
       app.clearMessages();
+      //var $room = $('#roomSelect option:selected').text();
 
       $.ajax({
         url: this.server,
         type: 'GET',
         contentType: 'application/json',
-        
+        //data: 'where={"roomname":"' + $room + '"}',
+
         error: function() {
-          $('#chats').html('<p>An error has occurred</p>');
+          $('.chats').html('<p>An error has occurred</p>');
         },
         
         success: function(data) {
@@ -104,25 +124,44 @@ $(document).ready(function() {
 
           _.each(data, message => {
             _.each(message, val => {
+              //console.log(val);
+              if (val.username !== undefined || val.username === '') {
+                val.username = purifyHTML(val.username);
+              } else {
+                val.username = 'anon';
+              }
+
+              val.username = val.username.replace(' ', '');
+              val.username = val.username.replace(/[^a-zA-Z0-9]/gi, '');
 
               var $chatMessage = $('<div class="chat ' + val.username + '"></div>'); 
               var x = $('<div class="chat username ' + val.username + '"></div>').text(val.username + ':');
-              x.append($('<div class="message"></div>').text(val.text));
+              var y = $('<div class="message"></div>').text(val.text);
+              var $clean;
+              if (val.text !== undefined) {
+                $clean = purifyHTML(val.text);
+              }
+              y.text($clean);
+              x.append(y);
+              
               $chatMessage.append(x);
 
-              if (val.roomname === $('#roomSelect option:selected').text()) {
-                $('#chats').append($chatMessage);
-              }
+              // if (val.roomname === $('#roomSelect option:selected').text()) {
+              $('#chats').append($chatMessage);
+              // }
 
               if (!app.userObj[val.username]) { 
                 app.userObj[val.username] = [];
               }
-              
-
+              // console.log(val.roomname);
+              app.addRoom(val.roomname);
             });
           });
         }
-      });   
+      });
+      // } else {
+
+      // }
     },
 
     userLog: {},
@@ -139,20 +178,34 @@ $(document).ready(function() {
       var x = $('<div class="chat username"></div>').text(message.username + ':');
       x.append($('<div class="message"></div>').text(message.text));
 
-      $('#chats').append($chatMessage);
+      // $('#chats').append($chatMessage);
       
       this.send(message);
       
     },
 
     rooms: 1,
+    roomList: [],
 
     addRoom: function(roomName) {
-      var $room = $('<option value="' + this.rooms.length + '">' + roomName + '</option>');
-      this.rooms++;
-      $('#roomSelect').append($room);
-    }
+      if (app.roomList.indexOf(roomName) === -1) {
+        if (roomName) {
+         // console.log('before'+roomName);
+          roomName = purifyHTML(roomName);
+         // console.log(roomName);
+        } else {
+          roomName = '';
+        }
+        app.roomList.push(roomName);
 
+        var $room = $('<option value="' + this.rooms.length + '">' + roomName + '</option>');
+        this.rooms++;
+        
+        if (roomName.length !== 0) { 
+          $('#roomSelect').append($room);
+        }
+      }
+    }
   
   };
 
