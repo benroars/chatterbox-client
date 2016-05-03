@@ -1,30 +1,3 @@
-// $.ajax({
-//       url: 'https://api.parse.com/1/classes/messages',
-//       type: 'GET',
-//     //  data: {
-//     //    limit: 30
-//     //  },
-//       contentType: 'application/json',
-      
-//       error: function() {
-//         console.log(data);
-//         $('.chats').html('<p>An error has occurred</p>');
-//       },
-      
-//       success: function(data) {
-//         //console.log(data.results);
-//         _.each(data.results, function(value) {
-//            console.log(value);
-//         });
-//         var $username = $('<h1>').text(data.username);
-//         var $text = $('<p>').text(data.text);
-//         var $roomname = $('<h5>').text(data.roomname);
-//         $('.chat')
-//           .append($username)
-//           .append($text)
-//           .append($roomname);
-//       }    
-//     });
 var app = {};
 // // YOUR CODE HERE:
 $(document).ready(function() {
@@ -79,22 +52,34 @@ $(document).ready(function() {
         var username = this.innerHTML.slice(0, this.innerHTML.indexOf(':'));
       //  console.log(app.userLog);
     //    if (app.userLog[$('#user')]) {
-        if (!app.userLog[$('#user').val()]['friends'][username]) {
-          app.userLog[$('#user').val()]['friends'][username] = app.userLog[username].posts;
-        }
-        console.log('ok');
+        // if (!app.userLog[$('#user').val()]['friends'][username]) {
+        //   app.userLog[$('#user').val()]['friends'][username] = app.userLog[username].posts;
+        // }
+        // console.log('ok');
+        
+
+
+        app.userObj[$('#user').val()].push(username);
         app.boldClassFriends($('#user').val());
 
-        app.fetch();
+        //app.fetch();
       });
     },
 
     boldClassFriends: function(user) {
-      var f = app.userLog[user].friends;
-      //console.log(f);
-      for (var key in f) {
-        console.log(f[key][0][0]);
-        $(f[key][0])[0].addClass('friend');
+      // var f = app.userLog[user].friends;
+      // //console.log(f);
+      // //console.log(f);
+      // for (var key in f) {
+      //   //console.log($('.' + key));
+      //   $('.' + key).each(function(i, value) {
+      //     //console.log(value);
+      //     // $(this).('<div class="chat mala friend"></div>');
+      //     console.log($(this));
+      //     $(this)[0].classList = 'chat mala friend';
+      //   });
+       // console.log(f[key][0]);
+//        $(f[key][0])[0].addClass('friend');
        // _.each(f[key], function(value) { 
        //  //console.log(value);
        //  $(value).addClass('friend');
@@ -104,7 +89,13 @@ $(document).ready(function() {
         // //   $(f[key][i]).addClass('friend');
         // }
 
-      }  
+     // }
+    for(var i = 0; i < app.userObj[user].length; i++) {
+      $('.' + app.userObj[user][i]).each(function() {
+        $(this).addClass('friend');
+      });
+    }
+
     },
 
     server: 'https://api.parse.com/1/classes/messages',
@@ -130,7 +121,7 @@ $(document).ready(function() {
 
     },
 
-
+    userObj: {},
 
     fetch: function() {
       //submits a GET request via $.ajax()
@@ -151,26 +142,33 @@ $(document).ready(function() {
 
           _.each(data, message => {
             _.each(message, val => {
-              if (!app.userLog[val.username]) {
-                app.userLog[val.username] = {posts: [], friends: {}};
+              // if (!app.userLog[val.username]) {
+              //   app.userLog[val.username] = {posts: [], friends: {}};
 
-              }
-              if (!app.userLog[$('#user').val()]) {
-                app.userLog[$('#user').val()] = {posts: [], friends: {}};
-              }
+              // }
+              // if (!app.userLog[$('#user').val()]) {
+              //   app.userLog[$('#user').val()] = {posts: [], friends: {}};
+              // }
 
-              var $chatMessage = $('<div class="chat"></div>'); //.text(val.username + ':\n' + val.text);
-              var x = $('<div class="chat username"></div>').text(val.username + ':');
+              var $chatMessage = $('<div class="chat ' + val.username + '"></div>'); //.text(val.username + ':\n' + val.text);
+              var x = $('<div class="chat username ' + val.username + '"></div>').text(val.username + ':');
               x.append($('<div class="message"></div>').text(val.text));
               $chatMessage.append(x);
 
               if (val.roomname === $('#roomSelect option:selected').text()) {
                 $('#chats').append($chatMessage);
               }
-              if (app.userLog[val.username].posts.indexOf($chatMessage) === -1) {
-                app.userLog[val.username].posts.push($chatMessage);
-              }
+              // if (app.userLog[val.username].posts.indexOf($chatMessage[0]) === -1) {
+              //   app.userLog[val.username].posts.push($chatMessage[0]);
+              // }
               //console.log(app.userLog);
+
+              if (!app.userObj[val.username]) { 
+                app.userObj[val.username] = [];
+              }
+              
+
+
             });
           });
         }
@@ -178,17 +176,6 @@ $(document).ready(function() {
     },
 
     userLog: {},
-    // userLog: {
-    //   user: {
-    //     posts: [<div></div>,<div></div>],
-    //     friends: {hjkasdfjk : hjkasdfjk}
-    //   },
-
-    //   name2: {
-    //     posts: [],
-    //     friends: {friendName : friendName}
-    //   }
-    // },
 
     clearMessages: function() {
       //$('#chats').html('');
