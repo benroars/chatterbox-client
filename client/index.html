@@ -7,26 +7,47 @@
 
     <!-- dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+  
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <!-- your scripts -->
     <script src="env/config.js"></script>
     <script src="./scripts/app.js"></script>
   </head>
+
   <body>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
 
-      <form action="/scripts/app.js" method="POST" onsubmit="app.addMessage();">
+      <h4>Room:   <select id="roomSelect">
+          <option value="1">room1</option>
+          </select>
+      
+      </h4>
+      
+      <form id="addRoom">
+        Room Name:<br>
+        <input id="nameroom" type="text" name="username" value=""><br><br>
+        <input type="submit" value="Add">
+      </form>
+      
+      <!--form action="scripts/app.js" method="POST" onsubmit="app.addMessage();">
         Username:<br>
-        <input id="user" type="text" name="username" value="user"><br>
+        <input id="user" type="text" name="username" value="user"><br><br>
         Message:<br>
         <input id="mess" type="text" name="text" value="asdf"><br><br>
-        Room:<br>
-        <input id="chatrm" type="text" name="roomname" value="1"><br><br>
+        <input type="submit" value="Submit">
+      </form-->
+
+      <form id="messageForm">
+        Username:<br>
+        <input id="user" type="text" name="username" value="user"><br><br>
+        Message:<br>
+        <input id="mess" type="text" name="text" value="asdf"><br><br>
         <input type="submit" value="Submit">
       </form>
+
     </div>
 
     <button class="button refresh-button" type="button">Refresh</button>
@@ -34,21 +55,6 @@
     
     <div id="chats"></div>
 
-    <script>
-      
-      // $(document).ready(function(){
-      //   var makePost = function(){
-      //     var obj = {};
-      //     obj[username] = document.getElementById('user');
-      //     obj[text] = document.getElementById('mess');
-      //     obj[roomname] = document.getElementById('chatrm');
-
-      //     app.send(obj);
-      //   }
-      // });
-
-
-      //$("input:text").val("Glenn Quagmire");
-    </script>
+    
   </body>
 </html>
