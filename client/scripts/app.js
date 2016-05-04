@@ -61,6 +61,9 @@ $(document).ready(function() {
         e.preventDefault();
        
         var username = this.innerHTML.replace(' ', '').slice(0, this.innerHTML.indexOf(':'));
+        if (username === '') {
+          username = 'user';
+        }
         app.userObj[$('#user').val()].push(username);
 
         app.boldClassFriends(username, app.userObj[$('#user').val()]);
@@ -125,12 +128,15 @@ $(document).ready(function() {
           _.each(data, message => {
             _.each(message, val => {
               //console.log(val);
-              if (val.username !== undefined || val.username === '') {
+              if (val.username !== undefined || val.username !== '') {
                 val.username = purifyHTML(val.username);
               } else {
-                val.username = 'anon';
+                val.username = 'user';
               }
 
+              if (val.username === '') {
+                val.username = 'user';
+              }
               val.username = val.username.replace(' ', '');
               val.username = val.username.replace(/[^a-zA-Z0-9]/gi, '');
 
