@@ -16,7 +16,6 @@ $(document).ready(function() {
 
     userObj: {},
     postObj: {},
-    refreshFlag: true,
     server: 'https://api.parse.com/1/classes/messages',
 
 
@@ -27,6 +26,7 @@ $(document).ready(function() {
         e.preventDefault();
         app.clearMessages();
         app.fetch();
+        //app.boldClassFriends($('#user').val(), app.userObj[$('#user').val()]);
       });
 
       $('.clear-button').on('click', (e) => {
@@ -47,7 +47,6 @@ $(document).ready(function() {
         };
 
         app.addMessage(messageObj);
-        //app.fetch();
       });
 
       $('#addRoom').on('submit', function(e) {
@@ -56,14 +55,20 @@ $(document).ready(function() {
         app.addRoom($room);
       });
     
+
       $('body').on('click', '.username', function(e) {
         
         e.preventDefault();
-       
+       //app.fetch();
         var username = this.innerHTML.replace(' ', '').slice(0, this.innerHTML.indexOf(':'));
-        if (username === '') {
+        if (username === '' || username === undefined) {
           username = 'user';
         }
+
+        if (!app.userObj[$('#user').val()]) {
+          app.userObj[$('#user').val()] = [];
+        }
+        
         app.userObj[$('#user').val()].push(username);
 
         app.boldClassFriends(username, app.userObj[$('#user').val()]);
@@ -127,7 +132,6 @@ $(document).ready(function() {
 
           _.each(data, message => {
             _.each(message, val => {
-              //console.log(val);
               if (val.username !== undefined || val.username !== '') {
                 val.username = purifyHTML(val.username);
               } else {
@@ -152,22 +156,20 @@ $(document).ready(function() {
               
               $chatMessage.append(x);
 
-              // if (val.roomname === $('#roomSelect option:selected').text()) {
-              $('#chats').append($chatMessage);
-              // }
+              if (val.roomname === $('#roomSelect option:selected').text()) {
+                $('#chats').append($chatMessage);
+              }
 
               if (!app.userObj[val.username]) { 
                 app.userObj[val.username] = [];
               }
               // console.log(val.roomname);
               app.addRoom(val.roomname);
+             // app.boldClassFriends(val.username, app.userObj[$('#user').val()]);
             });
           });
         }
       });
-      // } else {
-
-      // }
     },
 
     userLog: {},

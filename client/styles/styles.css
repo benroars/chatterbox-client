@@ -1,17 +1,18 @@
 body {
     background: #eee;
+    background-color: #6D909C !important;
     text-align: center;
     padding: 0 25px;
     font-family: arial, sans-serif;
 }
 
 #main, #chats {
-    width: 500px;
+    width: 60%;
     margin: auto;
     text-align: left;
     background: white;
     padding: 50px 60px;
-    border: solid #ddd;
+    border: 100px solid black;
     border-width: 0 1px 1px 1px;
 }
 
@@ -91,3 +92,7 @@ form input[type=text] {
 .message {
     font-weight: normal !important;
 }
+.clear-button{
+    margin-left: 5px;
+}
+
